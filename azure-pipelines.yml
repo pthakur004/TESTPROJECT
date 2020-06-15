@@ -11,23 +11,28 @@ pool:
 stages:
   - stage: BUILDSTAGE
     jobs: 
-    - job: Job1 
-      steps:
-      - script: echo Hello $(stagingvar), world edited for review !
-        displayName: 'Run a one-line script'
-      - bash: echo $(Build.BuildNumber)
-      - bash: ls -R $(System.DefaultWorkingDirectory)
-      - bash: ls -R $(Build.ArtifactStagingDirectory)
-      - task: CopyFiles@2
-        inputs:
-          SourceFolder: '$(System.DefaultWorkingDirectory)'
-          Contents: |
-            **/*.yaml
-            **/*.tf
-          TargetFolder: '$(Build.ArtifactStagingDirectory)'
-      - bash: ls -R $(Build.ArtifactStagingDirectory)
-      - task: PublishBuildArtifacts@1
-        inputs:
-          PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-          ArtifactName: 'drop'
-          publishLocation: 'Container'
+    - deployment: BUILDDEPLOYJOB
+      environment: BUILD
+      strategy: 
+       runOnce:
+        deploy:
+          steps:
+            - script: echo Deploy to build 
+  - stage: PRODUCTION
+    jobs: 
+    - deployment: PRODDEPLOYJOB
+      environment: PROD
+      strategy: 
+       runOnce:
+        deploy:
+          steps:
+            - script: echo Deploy to build 
+  - stage: TEST
+    jobs: 
+    - deployment: TESTDEPLOYJOB
+      environment: TEST
+      strategy: 
+       runOnce:
+        deploy:
+          steps:
+            - script: echo Deploy to build 
