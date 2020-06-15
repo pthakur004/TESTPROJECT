@@ -8,12 +8,27 @@ trigger:
 
 pool:
   vmImage: 'ubuntu-latest'
+stages:
+  - stage: BUILDSTAGE
+    jobs: 
+    - job: Job1 
+      steps:
+      - script: echo Hello, world edited for review !
+        displayName: 'Run a one-line script'
+    - job: Job2
+      steps:
+      - script: echo Hello, world edited for review 2.0!
+        displayName: 'Run a one-line script'
+  - stage: QAStage
+    jobs: 
+    - job: Job1 
+      steps:
+      - script: echo This is the QA  !
+        displayName: 'Run a one-line script'
+  - stage: PRODStage
+    jobs: 
+    - job: Job1 
+      steps:
+      - script: echo This is for production  !
+        displayName: 'Run a one-line script'
 
-steps:
-- script: echo Hello, world edited for review !
-  displayName: 'Run a one-line script'
-
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
